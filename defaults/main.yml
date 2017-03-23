@@ -1,0 +1,5 @@
+---
+root_dir: /home/ec2-user
+api_dir: "{{root_dir}}/server"
+web_dir: "{{root_dir}}/attendee-web"
+web_content_bucket: calligre-attendee-web

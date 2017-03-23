@@ -1,0 +1,17 @@
+---
+- name: Fetch API server code
+  git:
+    repo: https://github.com/Calligre/server.git
+    clone: yes
+    depth: 1
+    force: yes
+    dest: "{{ api_dir }}"
+
+- name: Install Python dependencies
+  pip:
+    requirements: "{{ api_dir }}/api/requirements.txt"
+    state: latest
+    executable: pip-3.5
+
+- name: Fetch web files
+  command: aws s3 sync s3://{{web_content_bucket}} {{web_dir}}

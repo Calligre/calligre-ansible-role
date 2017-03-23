@@ -1,0 +1,59 @@
+---
+- name: create dehydrated web directory
+  file:
+    path: /var/www/dehydrated
+    state: directory
+    owner: nginx
+    group: nginx
+
+- name: create dehydrated config directory
+  file:
+    path: /etc/dehydrated
+    state: directory
+    owner: root
+    group: root
+
+- name: Create dehydrated config file
+  template:
+    src: dehydrated.conf.j2
+    dest: /etc/dehydrated/config
+    owner: root
+    group: root
+
+- name: Create dehydrated domain list
+  template:
+    src: dehydrated-domains.j2
+    dest: /etc/dehydrated/domains.txt
+    owner: root
+    group: root
+
+- name: Fetch dehydrated script
+  get_url:
+    dest: /usr/local/bin/dehydrated
+    url: https://raw.githubusercontent.com/lukas2511/dehydrated/116386486b3749e4c5e1b4da35904f30f8b2749b/dehydrated
+    owner: root
+    group: root
+    mode: 0755
+
+- name: Accept letsencrypt terms
+  command: /usr/local/bin/dehydrated --register --accept-terms
+
+- name: Create letsencrypt certs
+  command: /usr/local/bin/dehydrated -c
+
+- name: Create nginx SSL config
+  template:
+    src: ssl.conf.j2
+    dest: /etc/nginx/conf.d/calligre-ssl.conf
+    owner: root
+    group: root
+
+- name: Validate nginx config
+  command: nginx -t
+  changed_when: False
+
+- name: Restart nginx
+  service:
+    name: nginx
+    enabled: yes
+    state: restarted

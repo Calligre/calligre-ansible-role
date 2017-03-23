@@ -1,0 +1,31 @@
+---
+- name: Install Packages
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - nginx
+    - git
+    - python35
+    - python35-pip
+    - python35-devel
+    - postgresql95-devel
+    - gcc
+    - libffi-devel
+    - openssl-devel
+    - supervisor
+
+- name: Fetch content
+  include: content.yml
+
+- name: Setup nginx
+  include: nginx.yml
+
+- name: Setup letsencrypt & SSL
+  include: letsencrypt.yml
+
+- name: Setup database
+  include: db.yml
+
+- name: Setup API
+  include: api.yml

@@ -1,0 +1,19 @@
+# {{ansible_managed}}
+server {
+  listen 80 default_server;
+  listen [::]:80 default_server;
+
+  server_name  {{calligre_domain}} _;
+  root         {{web_dir}};
+  
+  location /.well-known/acme-challenge {
+    alias /var/www/dehydrated;
+  }
+
+  location / {
+    return 301 https://{{calligre_domain}}$request_uri;
+  }
+
+  access_log  /var/log/nginx/{{calligre_domain}}/access.log;
+  error_log  /var/log/nginx/{{calligre_domain}}/error.log;
+}

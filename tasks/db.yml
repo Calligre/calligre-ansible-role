@@ -1,0 +1,21 @@
+---
+- name: Create unpriviliged postgres user
+  postgresql_user:
+    login_host: "{{db_host}}"
+    port: "{{db_port}}"
+    login_user: "{{db_admin_user}}"
+    login_password: "{{db_admin_password}}"
+    name: "{{db_user}}"
+    password: "{{db_password}}"
+
+- name: Create Calligre database
+  postgresql_db:
+    login_host: "{{db_host}}"
+    port: "{{db_port}}"
+    login_user: "{{db_admin_user}}"
+    login_password: "{{db_admin_password}}"
+    name: "{{db_base}}"
+    owner: "{{db_user}}"
+
+- name: Create tables
+  command: PGPASSWORD={{db_password}} psql -h {{db_host}} -p {{db_port}} -U {{db_user}} {{db_base}} -f {{api_dir}}/database/structure.up.sql

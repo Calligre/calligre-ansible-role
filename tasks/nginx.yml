@@ -1,0 +1,38 @@
+---
+- name: Create nginx SSL directory
+  file:
+    path: /etc/nginx/ssl
+    state: directory
+    owner: root
+    group: root
+
+- name: Create nginx domain log directory
+  file:
+    path: /var/log/nginx/{{calligre_domain}}
+    state: directory
+    owner: root
+    group: root
+
+- name: Create nginx config
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+    owner: root
+    group: root
+
+- name: Create nginx non-SSL config
+  template:
+    src: no-ssl.conf.j2
+    dest: /etc/nginx/conf.d/calligre-no-ssl.conf
+    owner: root
+    group: root
+
+- name: Validate nginx config
+  command: nginx -t
+  changed_when: False
+
+- name: Start nginx
+  service:
+    name: nginx
+    enabled: yes
+    state: started

@@ -1,0 +1,34 @@
+# {{ansible_managed}}
+server {
+  listen 443 ssl default_server;
+  listen [::]:443 ssl default_server;
+
+  ssl_certificate /etc/nginx/ssl/{{calligre_domain}}/fullchain.pem;
+  ssl_certificate_key /etc/nginx/ssl/{{calligre_domain}}/privkey.pem;
+
+  server_name  {{calligre_domain}} _;
+
+  location /.well-known/acme-challenge {
+    alias /var/www/dehydrated;
+  }
+
+  location /api {
+      proxy_pass        http://127.0.0.1:8080;
+      proxy_redirect    off;
+
+      proxy_set_header  Host             $host;
+      proxy_set_header  X-Real-IP        $remote_addr;
+      proxy_set_header  X-Forwarded-For  $proxy_add_x_forwarded_for;
+  }
+
+  location /admin {
+      alias             {{web_dir}}/organizer;
+  }
+
+  location / {
+      root              {{web_dir}}/attendee;
+  }
+
+  access_log  /var/log/nginx/{{calligre_domain}}/access.log;
+  error_log  /var/log/nginx/{{calligre_domain}}/error.log;
+}
