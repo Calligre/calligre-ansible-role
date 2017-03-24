@@ -13,7 +13,11 @@
     - gcc
     - libffi-devel
     - openssl-devel
-    - supervisor
+
+- name: Install python Packages
+  pip:
+    name: supervisor
+    state: latest
 
 - name: Fetch content
   include: content.yml
