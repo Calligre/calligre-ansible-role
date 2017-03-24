@@ -14,13 +14,10 @@
     - libffi-devel
     - openssl-devel
 
-- name: Install python Packages
-  pip:
-    name: supervisor
-    state: latest
-
 - name: Fetch content
   include: content.yml
+  tags:
+    - api
 
 - name: Setup nginx
   include: nginx.yml
@@ -30,6 +27,10 @@
 
 - name: Setup database
   include: db.yml
+  tags:
+    - database
 
 - name: Setup API
   include: api.yml
+  tags:
+    - api

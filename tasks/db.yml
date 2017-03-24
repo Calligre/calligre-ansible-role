@@ -1,4 +1,9 @@
 ---
+- name: Install python Packages
+  pip:
+    name: psycopg2
+    state: latest
+
 - name: Create unpriviliged postgres user
   postgresql_user:
     login_host: "{{db_host}}"
@@ -7,6 +12,7 @@
     login_password: "{{db_admin_password}}"
     name: "{{db_user}}"
     password: "{{db_password}}"
+    db: postgres # connect to the default postgres database
 
 - name: Create Calligre database
   postgresql_db:
@@ -18,4 +24,4 @@
     owner: "{{db_user}}"
 
 - name: Create tables
-  command: PGPASSWORD={{db_password}} psql -h {{db_host}} -p {{db_port}} -U {{db_user}} {{db_base}} -f {{api_dir}}/database/structure.up.sql
+  shell: PGPASSWORD={{db_password}} /usr/bin/psql -h {{db_host}} -p {{db_port}} -U {{db_user}} {{db_base}} -f {{api_dir}}/database/structure.up.sql

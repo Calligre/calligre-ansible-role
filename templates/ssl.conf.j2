@@ -21,13 +21,22 @@ server {
       proxy_set_header  X-Forwarded-For  $proxy_add_x_forwarded_for;
   }
 
+  location / {
+      root              {{web_dir}}/attendee;
+  }
+
+  location /attendee {
+      alias             {{web_dir}}/attendee;
+  }
+
   location /admin {
       alias             {{web_dir}}/organizer;
   }
 
-  location / {
-      root              {{web_dir}}/attendee;
+  location /admin/organizer {
+      alias             {{web_dir}}/organizer;
   }
+
 
   access_log  /var/log/nginx/{{calligre_domain}}/access.log;
   error_log  /var/log/nginx/{{calligre_domain}}/error.log;
