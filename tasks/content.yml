@@ -7,7 +7,7 @@
     force: yes
     dest: "{{ api_dir }}"
 
-- name: Install Python dependencies
+- name: Install Python API dependencies
   pip:
     requirements: "{{ api_dir }}/api/requirements.txt"
     state: latest
