@@ -7,10 +7,14 @@
     group: ec2-user
 
 - name: Start gunicorn
-  shell: source {{api_dir}}/gunicorn.env; /usr/local/bin/gunicorn -c {{api_dir}}/api/gunicorn.conf.py api:app
+  shell: source gunicorn.env; /usr/local/bin/gunicorn -c api/gunicorn.conf.py api:app
+  args:
+    chdir: "{{api_dir}}"
+  become: true
+  become_user: ec2-user
 
 - name: Autostart gunicorn on boot
   cron:
-    job: source {{api_dir}}/gunicorn.env; /usr/local/bin/gunicorn -c {{api_dir}}/api/gunicorn.conf.py api:app
+    job: cd {{api_dir}}; source gunicorn.env; /usr/local/bin/gunicorn -c api/gunicorn.conf.py api:app
     user: ec2-user
     special_time: reboot
