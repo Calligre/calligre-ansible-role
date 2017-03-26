@@ -1,0 +1,8 @@
+#!/bin/bash
+ENVS="{{api_dir}}/gunicorn.env"
+if [ -e $ENVS ] && [ -s $ENVS ] && [ -f $ENVS ]
+then 
+	source $ENVS
+fi
+cd "{{api_dir}}"
+/usr/local/bin/gunicorn -c "{{api_dir}}/api/gunicorn.conf.py" api:app

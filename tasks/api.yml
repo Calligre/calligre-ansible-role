@@ -6,8 +6,16 @@
     owner: ec2-user
     group: ec2-user
 
+- name: Land start script
+  template:
+    src: start-api.sh.j2
+    dest: "{{api_dir}}/start-api.sh"
+    owner: ec2-user
+    group: ec2-user
+    mode: 0755
+
 - name: Start gunicorn
-  shell: source gunicorn.env; /usr/local/bin/gunicorn -c api/gunicorn.conf.py api:app
+  shell: source gunicorn.env; 
   args:
     chdir: "{{api_dir}}"
   become: true
@@ -15,6 +23,6 @@
 
 - name: Autostart gunicorn on boot
   cron:
-    job: cd {{api_dir}}; source gunicorn.env; /usr/local/bin/gunicorn -c api/gunicorn.conf.py api:app
+    job: "{{api_dir}}/start-api.sh"
     user: ec2-user
     special_time: reboot
