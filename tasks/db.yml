@@ -25,3 +25,6 @@
 
 - name: Create tables
   shell: PGPASSWORD={{db_password}} /usr/bin/psql -h {{db_host}} -p {{db_port}} -U {{db_user}} {{db_base}} -f {{api_dir}}/database/structure.up.sql
+
+- name: Load default data
+  shell: PGPASSWORD={{db_password}} /usr/bin/psql -h {{db_host}} -p {{db_port}} -U {{db_user}} {{db_base}} -f {{api_dir}}/database/default.sql -v v1="{{calligre_name}}" -v v2="{{calligre_domain}}" -v v3="{{calligre_logo}}"
